@@ -9,8 +9,15 @@ const authenticateToken = async (req, res, next) => {
         if (err) {
             return res.status(401).json({ message: "invalid token" })
         }
-        req.userID = decoded.name
-        next()
+        if (decoded.role == "admin") {
+            req.userID = decoded.name
+            req.role = decoded.role
+
+            next()
+        }
+        else {
+            return res.status(401).json({ message: 'Access denied for users.' });
+        }
     })
 }
 
